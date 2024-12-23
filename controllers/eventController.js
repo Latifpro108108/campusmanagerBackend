@@ -48,12 +48,12 @@ exports.rsvpEvent = async (req, res) => {
             return res.status(400).json({ message: 'Already registered for this event' });
         }
   
-        // Check capacity
+        
         if (event.attendees.length >= event.capacity) {
             return res.status(400).json({ message: 'Event is at full capacity' });
         }
 
-        // Create registration record
+
         const registration = await Registration.create({
             eventId: event._id,
             userId: req.user._id,
@@ -63,11 +63,11 @@ exports.rsvpEvent = async (req, res) => {
             requirements
         });
 
-        // Add user to attendees
+     
         event.attendees.push(req.user._id);
         await event.save();
 
-        // Add event to user's registered events
+        
         await User.findByIdAndUpdate(req.user._id, {
             $push: { registeredEvents: event._id }
         });
